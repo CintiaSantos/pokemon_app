@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/CintiaSantos/pokemon_app#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "moongose": "^1.0.0",
+    "morgan": "^1.10.0"
   }
 }

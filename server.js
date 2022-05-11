@@ -1,27 +1,31 @@
-const express = require('express')
-const pokemon = require('./models/pokemon')
-const server = express()
-const PORT = process.env.PORT || 3000
+const express = require("express");
+const morgan = require("morgan");
+const pokemon = require("./models/pokemon");
+const server = express();
 
-server.use(express.json())
-server.get('/', (req, res) => {
-  res.send("<h1>Welcome to the Pokemon App!</h1>")
-})
+// import model
+const Pokemon = require("./models/pokemon");
 
-server.get('/pokemon', (req, res) => {
-    res.json(pokemon)
-  })
+const PORT = process.env.PORT || 3000;
 
-server.get('/pokemon/:name', (req, res) => {
-    let name = req.params.name
-    const myPokemon = pokemon.find(obj => obj.name === name)
-    res.send(`
-    <h2>${myPokemon.name}</h2>
-    <img src=${myPokemon.img}.jpg >
-    `)
-    // res.json(myPokemon)
-  })
+//require mongodb connection
+const mongoConfig = require("./config");
+
+server.use(morgan("dev"));
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
+
+// home route
+server.get("/", (req, res) => {
+  res.status(200).json({ message: "API UP!" });
+});
+
+const pokemonRouter = require("./pokemonControllers/pokemonController");
+require("dotenv").config();
+
+server.use("/pokemon", pokemonRouter);
 
 server.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
-})
+  mongoConfig();
+  console.log(`Server is listening on port ${PORT}`);
+});
